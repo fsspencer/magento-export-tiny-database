@@ -101,7 +101,7 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
             'catalogindex_aggregation_to_tag'
         );
 
-        if ($$this->getArg('ignore-orders')) {
+        if ($this->getArg('ignore-orders')) {
             $tables = array_merge($tables, array(
                 'sales_flat_creditmemo',
                 'sales_flat_creditmemo_comment',
@@ -149,7 +149,7 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
             );
         }
 
-        if ($$this->getArg('ignore-url-rewrites')) {
+        if ($this->getArg('ignore-url-rewrites')) {
             $tables = array_merge($tables, array('core_url_rewrite'));
         }
       

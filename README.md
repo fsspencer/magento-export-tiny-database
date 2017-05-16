@@ -26,6 +26,9 @@ By default our script will ignore all the data from log tables and report tables
 
     # Ignore orders 
     php -f shell/generate_tiny_dump.php -- --ignore-orders
+
+    # Ignore URL rewrites
+    php -f shell/generate_tiny_dump.php -- --ignore-url-rewrites
     
     # Ignore flat catalog tables
     php -f shell/generate_tiny_dump.php -- --ignore-flat-catalog
