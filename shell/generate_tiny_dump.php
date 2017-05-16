@@ -30,14 +30,14 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
 
     }
 
-    public function getDumpCommand($fileName, $noData = false, $ignoreOrders = false)
+    public function getDumpCommand($fileName, $noData = false)
     {
         $db = $this->getDbInfo();
         $dumpSchema = 'mysqldump' . ' ';
         if ($noData) {
             $dumpSchema .= '--no-data' . ' ';
         } else {
-            $dumpSchema .= $this->getIgnoreTables($ignoreOrders);
+            $dumpSchema .= $this->getIgnoreTables();
         }
         $dumpSchema .= '-u ' . $db['user'] . ' ';
         $dumpSchema .= '--password="' . $db['pass'] . '" ';
@@ -75,7 +75,7 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
         return $port;
     }
 
-    public function getIgnoreTables($ignoreOrders = false)
+    public function getIgnoreTables()
     {
         $tables = array(
             'adminnotification_inbox',
@@ -101,7 +101,7 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
             'catalogindex_aggregation_to_tag'
         );
 
-        if ($ignoreOrders) {
+        if ($$this->getArg('ignore-orders')) {
             $tables = array_merge($tables, array(
                 'sales_flat_creditmemo',
                 'sales_flat_creditmemo_comment',
@@ -148,6 +148,10 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
                 'sales_shipping_aggregated_order')
             );
         }
+
+        if ($$this->getArg('ignore-url-rewrites')) {
+            $tables = array_merge($tables, array('core_url_rewrite'));
+        }
       
         $ignoreTables = ' ';
         $db = $this->getDbInfo();
@@ -169,6 +173,7 @@ Usage:  php -f generate.php -- [options]
 
   --ignore-orders            Ignore Orders
   --ignore-flat-catalog            Ignore Flat Catalog
+  --ignore-url-rewrites            Ignore URL Rewrites
   help                                    This help
 
 
