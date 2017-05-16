@@ -56,7 +56,8 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
             'host' => (string)$config->host,
             'user' => (string)$config->username,
             'pass' => (string)$config->password,
-            'name' => (string)$config->dbname
+            'name' => (string)$config->dbname,
+            'pref' => Mage::getConfig()->getTablePrefix()
         );
 
         $db['port'] = $this->getDatabasePort($db);
