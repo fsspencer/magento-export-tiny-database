@@ -1,9 +1,8 @@
-Welcome to StackEdit!
+Magento Tiny SQL Dump
 ===================
 
 
-Hey! I'm your first Markdown document in **StackEdit**[^stackedit]. Don't delete me, I'm very helpful! I can be recovered anyway in the **Utils** tab of the <i class="icon-cog"></i> **Settings** dialog.
-
+This is a simple shell script built for magento with the purpose of generate a tiny version of the database in two separated sql scripts, one for schema and the other for data.
 ----------
 
 
