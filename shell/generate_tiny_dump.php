@@ -14,7 +14,7 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
         $db = $this->getDbInfo();
         $fileNameSchema = $db['name'] . '-schema-' . date('j-m-y-h-i-s') . '.sql';
         $fileNameData = $db['name'] . '-data-' . date('j-m-y-h-i-s') . '.sql';
-        
+
         $dumpSchemaCmd = $this->getDumpCommand($fileNameSchema, true);
         $dumpDataCmd = $this->getDumpCommand($fileNameData, false);
 
@@ -22,7 +22,7 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
         fputs($fp, "#!/bin/bash\n\n");
         fputs($fp, $dumpSchemaCmd."\n\n");
         fputs($fp, $dumpDataCmd."\n\n");
-     
+
         $tarFile = $db['name'] . '-' . date('j-m-y-h-i-s') . '.gz';
         fputs($fp, 'tar cfz ' . $tarFile . ' ' . $fileNameSchema . ' ' . $fileNameData . "\n\n");
         fputs($fp, 'rm ' . $fileNameSchema . ' ' . $fileNameData);
@@ -44,7 +44,7 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
         $dumpSchema .= '-h ' . $db['host'] . ' ';
         $dumpSchema .= '--port=' . $db['port'] . ' ';
         $dumpSchema .= $db['name'] .' > ' . $fileName;
-      
+
         return $dumpSchema;
     }
 
@@ -61,7 +61,7 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
         );
 
         $db['port'] = $this->getDatabasePort($db);
-      
+
         return $db;
     }
 
@@ -103,62 +103,76 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
 
         if ($this->getArg('ignore-orders')) {
             $tables = array_merge($tables, array(
-                'sales_flat_creditmemo',
-                'sales_flat_creditmemo_comment',
-                'sales_flat_creditmemo_grid',
-                'sales_flat_creditmemo_item',
-                'sales_flat_invoice',
-                'sales_flat_invoice_comment',
-                'sales_flat_invoice_grid',
-                'sales_flat_invoice_item',
-                'sales_flat_order',
-                'sales_flat_order_address',
-                'sales_flat_order_grid',
-                'sales_flat_order_item',
-                'sales_flat_order_payment',
-                'sales_flat_order_shipping_rate',
-                'sales_flat_order_status_history',
-                'sales_flat_quote',
-                'sales_flat_quote_address',
-                'sales_flat_quote_address_item',
-                'sales_flat_quote_item',
-                'sales_flat_quote_item_option',
-                'sales_flat_quote_payment',
-                'sales_flat_quote_shipping_rate',
-                'sales_flat_shipment',
-                'sales_flat_shipment_comment',
-                'sales_flat_shipment_grid',
-                'sales_flat_shipment_item',
-                'sales_flat_shipment_track',
-                'sales_invoiced_aggregated',
-                'sales_invoiced_aggregated_order',
-                'sales_order_aggregated_created',
-                'sales_order_aggregated_updated',
-                'sales_order_status',
-                'sales_order_status_label',
-                'sales_order_status_state',
-                'sales_order_tax',
-                'sales_order_tax_item',
-                'sales_payment_transaction',
-                'sales_recurring_profile',
-                'sales_recurring_profile_order',
-                'sales_refunded_aggregated',
-                'sales_refunded_aggregated_order',
-                'sales_shipping_aggregated',
-                'sales_shipping_aggregated_order')
+                    'sales_flat_creditmemo',
+                    'sales_flat_creditmemo_comment',
+                    'sales_flat_creditmemo_grid',
+                    'sales_flat_creditmemo_item',
+                    'sales_flat_invoice',
+                    'sales_flat_invoice_comment',
+                    'sales_flat_invoice_grid',
+                    'sales_flat_invoice_item',
+                    'sales_flat_order',
+                    'sales_flat_order_address',
+                    'sales_flat_order_grid',
+                    'sales_flat_order_item',
+                    'sales_flat_order_payment',
+                    'sales_flat_order_shipping_rate',
+                    'sales_flat_order_status_history',
+                    'sales_flat_quote',
+                    'sales_flat_quote_address',
+                    'sales_flat_quote_address_item',
+                    'sales_flat_quote_item',
+                    'sales_flat_quote_item_option',
+                    'sales_flat_quote_payment',
+                    'sales_flat_quote_shipping_rate',
+                    'sales_flat_shipment',
+                    'sales_flat_shipment_comment',
+                    'sales_flat_shipment_grid',
+                    'sales_flat_shipment_item',
+                    'sales_flat_shipment_track',
+                    'sales_invoiced_aggregated',
+                    'sales_invoiced_aggregated_order',
+                    'sales_order_aggregated_created',
+                    'sales_order_aggregated_updated',
+                    'sales_order_status',
+                    'sales_order_status_label',
+                    'sales_order_status_state',
+                    'sales_order_tax',
+                    'sales_order_tax_item',
+                    'sales_payment_transaction',
+                    'sales_recurring_profile',
+                    'sales_recurring_profile_order',
+                    'sales_refunded_aggregated',
+                    'sales_refunded_aggregated_order',
+                    'sales_shipping_aggregated',
+                    'sales_shipping_aggregated_order')
             );
         }
 
         if ($this->getArg('ignore-url-rewrites')) {
             $tables = array_merge($tables, array('core_url_rewrite'));
         }
-      
+
+        if ($this->getArg('ignore-flat-catalog')) {
+
+            /** @var Mage_Core_Model_Store $store */
+            foreach (Mage::app()->getStores() as $store) {
+                if ($store->getId() > 0) {
+                    $tables = array_merge($tables, array(
+                        'catalog_category_flat_store_' . $store->getId()),
+                        'catalog_product_flat_' . $store->getId()
+                    );
+                }
+            }
+
+        }
+
         $ignoreTables = ' ';
         $db = $this->getDbInfo();
         foreach($tables as $table) {
             $ignoreTables .= '--ignore-table=' . $db['name'] . '.' . $db['pref'] . $table . ' ';
         }
-      
+
         return $ignoreTables;
     }
 
