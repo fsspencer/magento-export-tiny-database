@@ -42,7 +42,7 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
         $dumpSchema .= '-u ' . $db['user'] . ' ';
         $dumpSchema .= '--password="' . $db['pass'] . '" ';
         $dumpSchema .= '-h ' . $db['host'] . ' ';
-        $dumpSchema .= '--port=' . $db['port'] . ' ';
+        if (isset($db['port']) || $db['port'] == '') $dumpSchema .= '--port=' . $db['port'] . ' ';
         $dumpSchema .= $db['name'] .' > ' . $fileName;
 
         return $dumpSchema;
