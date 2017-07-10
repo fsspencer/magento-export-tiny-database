@@ -42,7 +42,7 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
         $dumpSchema .= '-u ' . $db['user'] . ' ';
         $dumpSchema .= '--password="' . $db['pass'] . '" ';
         $dumpSchema .= '-h ' . $db['host'] . ' ';
-        if (isset($db['port']) || $db['port'] == '') $dumpSchema .= '--port=' . $db['port'] . ' ';
+        if (isset($db['port']) && $db['port'] !== '') $dumpSchema .= '--port=' . $db['port'] . ' ';
         $dumpSchema .= $db['name'] .' > ' . $fileName;
 
         return $dumpSchema;
@@ -101,7 +101,7 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
             'catalogindex_aggregation_to_tag'
         );
 
-        if ($this->getArg('ignore-orders')) {
+        if ($this->getArg('ignore-orders') || $this->getArg('ignore-all')) {
             $tables = array_merge($tables, array(
                     'sales_flat_creditmemo',
                     'sales_flat_creditmemo_comment',
@@ -149,11 +149,11 @@ class Codealist_Shell_GenerateTinyDump extends Mage_Shell_Abstract
             );
         }
 
-        if ($this->getArg('ignore-url-rewrites')) {
+        if ($this->getArg('ignore-url-rewrites') || $this->getArg('ignore-all')) {
             $tables = array_merge($tables, array('core_url_rewrite'));
         }
 
-        if ($this->getArg('ignore-flat-catalog')) {
+        if ($this->getArg('ignore-flat-catalog') || $this->getArg('ignore-all')) {
 
             /** @var Mage_Core_Model_Store $store */
             foreach (Mage::app()->getStores() as $store) {
@@ -188,6 +188,7 @@ Usage:  php -f generate.php -- [options]
   --ignore-orders            Ignore Orders
   --ignore-flat-catalog            Ignore Flat Catalog
   --ignore-url-rewrites            Ignore URL Rewrites
+  --ignore-all            Ignore Orders, Flat Catalog and URL Rewrites
   help                                    This help
 
 
