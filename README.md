@@ -25,13 +25,13 @@ Options
 By default our script will ignore all the data from log tables and report tables but also offers the ability to ignore orders or flat catalog tables by using the following arguments.
 
     # Ignore orders 
-    php -f shell/generate_tiny_dump.php -- --ignore-orders
+    php -f shell/generate_tiny_dump.php -- -ignore-orders
 
     # Ignore URL rewrites
-    php -f shell/generate_tiny_dump.php -- --ignore-url-rewrites
+    php -f shell/generate_tiny_dump.php -- -ignore-url-rewrites
     
     # Ignore flat catalog tables
-    php -f shell/generate_tiny_dump.php -- --ignore-flat-catalog
+    php -f shell/generate_tiny_dump.php -- -ignore-flat-catalog
     
     # Ignore only logs and reports
     php -f shell/generate_tiny_dump.php
